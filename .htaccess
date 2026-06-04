@@ -1,0 +1,21 @@
+<IfModule mod_rewrite.c>
+    Options -Indexes +FollowSymLinks
+    RewriteEngine On
+
+    # Redirect legacy /public/* URLs to clean paths (works in any subdirectory)
+    RewriteCond %{THE_REQUEST} \s[^\s]*/public/ [NC]
+    RewriteRule ^public/(.*)$ $1 [R=301,L]
+
+    # Forward requests into public/ (Apache serves existing files; public/.htaccess handles the rest)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+<IfModule mod_dir.c>
+    DirectoryIndex index.php
+</IfModule>
+
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
