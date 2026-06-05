@@ -47,6 +47,36 @@ class SiteContentService
             $config['meta'] = array_merge($config['meta'] ?? [], $meta);
         }
 
+        return $this->mergeHomepageSections($config);
+    }
+
+    public function mergeHomepageSections(array $config): array
+    {
+        $sectionKeys = [
+            'hero_slides',
+            'highlights',
+            'overview',
+            'stats',
+            'values',
+            'featured_images',
+            'trust_metrics',
+            'school',
+            'contact',
+            'footer',
+        ];
+
+        foreach ($sectionKeys as $key) {
+            $value = SiteSetting::get('homepage', $key);
+            if ($value !== null) {
+                $config[$key] = $value;
+            }
+        }
+
+        $catalogue = SiteSetting::get('homepage', 'catalogue');
+        if ($catalogue !== null) {
+            $config['catalogue'] = array_merge($config['catalogue'] ?? [], $catalogue);
+        }
+
         return $config;
     }
 

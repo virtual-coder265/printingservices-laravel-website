@@ -2,7 +2,9 @@
     $clientAreaHref = auth()->check() ? route('dashboard') : route('login');
     $clientAreaLabel = auth()->check() ? 'Dashboard' : $page['utility']['client_area_label'];
     $currentPage = $currentPage ?? '';
-    $hasBrandLogo = file_exists(public_path($page['brand']['logo']));
+    $brandLogo = $page['brand']['logo'] ?? null;
+    $favicon = $page['brand']['favicon'] ?? $brandLogo;
+    $hasBrandLogo = media_exists($brandLogo);
     $navItems = collect($page['public_menu'] ?? [])->map(function ($item) {
         return [
             'key' => $item['key'],
@@ -25,13 +27,13 @@
 
     <meta property="og:title" content="{{ $page['meta']['title'] }}">
     <meta property="og:description" content="{{ $page['meta']['description'] }}">
-    <meta property="og:image" content="{{ asset($page['brand']['logo']) }}">
+    <meta property="og:image" content="{{ media_url($brandLogo) }}">
     <meta property="og:url" content="{{ url('/') }}">
     <meta property="og:type" content="website">
 
     <title>{{ $page['meta']['title'] }}</title>
 
-    <link rel="icon" type="image/png" href="{{ asset($page['brand']['logo']) }}">
+    <link rel="icon" type="image/png" href="{{ media_url($favicon) }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -84,7 +86,7 @@
                             @if ($hasBrandLogo)
                                 <img
                                     class="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-                                    src="{{ asset($page['brand']['logo']) }}"
+                                    src="{{ media_url($brandLogo) }}"
                                     alt="{{ $page['brand']['name'] }}"
                                 >
                             @else
@@ -279,7 +281,7 @@
                 <div class="space-y-6">
                     <div class="flex items-center gap-3">
                         @if ($hasBrandLogo)
-                            <img class="h-10 w-auto" src="{{ asset($page['brand']['logo']) }}" alt="{{ $page['brand']['name'] }}">
+                            <img class="h-10 w-auto" src="{{ media_url($brandLogo) }}" alt="{{ $page['brand']['name'] }}">
                         @else
                             <span class="text-lg font-bold font-display tracking-tight text-white uppercase">{{ $page['brand']['short_name'] }}</span>
                         @endif

@@ -17,7 +17,7 @@
             @foreach ($page['hero_slides'] as $index => $slide)
                 <div class="hero-slide{{ $index === 0 ? ' is-active' : '' }}" data-hero-slide>
                     <img
-                        src="{{ asset($slide['image']) }}"
+                        src="{{ media_url($slide['image']) }}"
                         alt=""
                         class="hero-slide-image"
                         @if ($index === 0) fetchpriority="high" @endif
@@ -115,10 +115,10 @@
 
                     <div class="welcome-image-stack flex flex-col gap-6 justify-center relative reveal-fade-in" style="transition-delay: 0.1s;">
                         <div class="relative w-11/12 rounded-2xl overflow-hidden shadow-lg border border-slate-100">
-                            <img src="{{ asset($page['overview']['image_primary']) }}" alt="Department of Printing Services production" class="w-full h-48 object-cover">
+                            <img src="{{ media_url($page['overview']['image_primary']) }}" alt="Department of Printing Services production" class="w-full h-48 object-cover">
                         </div>
                         <div class="relative w-11/12 self-end rounded-2xl overflow-hidden shadow-lg border border-slate-100 -mt-8 z-10">
-                            <img src="{{ asset($page['overview']['image_secondary']) }}" alt="Government Press printed output" class="w-full h-48 object-cover">
+                            <img src="{{ media_url($page['overview']['image_secondary']) }}" alt="Government Press printed output" class="w-full h-48 object-cover">
                         </div>
 
                         <div class="welcome-badge-5 absolute top-1/2 left-4 -translate-y-12 z-20 p-4 w-28 h-28 flex flex-col items-center justify-center text-center">
@@ -225,7 +225,7 @@
                     <div class="service-card-dark rounded-2xl overflow-hidden flex flex-col justify-between reveal-fade-up" @if ($index > 0) style="transition-delay: {{ $index * 0.05 }}s;" @endif>
                         <div>
                             <div class="relative h-48 overflow-hidden">
-                                <img src="{{ asset($image) }}" alt="{{ $service['title'] }}" class="w-full h-full object-cover">
+                                <img src="{{ media_url($image) }}" alt="{{ $service['title'] }}" class="w-full h-full object-cover">
                                 <div class="service-icon-holder absolute -bottom-6 left-6 w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-colors duration-300">
                                     <i data-lucide="{{ $lucideIcon }}" class="w-5 h-5"></i>
                                 </div>
@@ -268,7 +268,7 @@
                     @foreach ($page['featured_images'] as $featured)
                         <div class="min-w-[280px] sm:min-w-[320px] bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-xl shrink-0 group backdrop-blur-sm">
                             <div class="h-48 overflow-hidden relative">
-                                <img src="{{ asset($featured['image']) }}" alt="{{ $featured['alt'] }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <img src="{{ media_url($featured['image']) }}" alt="{{ $featured['alt'] }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                             </div>
                         </div>
                     @endforeach
@@ -298,7 +298,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div class="relative reveal-fade-in">
                     <div class="quote-request-card p-4 overflow-hidden">
-                        <img src="{{ asset($page['school']['image']) }}" alt="{{ $page['school']['title'] }}" class="w-full h-80 object-cover rounded-xl">
+                        <img src="{{ media_url($page['school']['image']) }}" alt="{{ $page['school']['title'] }}" class="w-full h-80 object-cover rounded-xl">
                     </div>
                 </div>
 

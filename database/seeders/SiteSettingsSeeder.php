@@ -24,5 +24,31 @@ class SiteSettingsSeeder extends Seeder
         SiteSetting::set('utility', 'social_links', $homepage['utility']['social_links'] ?? []);
         SiteSetting::set('brand', 'info', $homepage['brand'] ?? []);
         SiteSetting::set('meta', 'info', $homepage['meta'] ?? []);
+
+        $homepageSections = [
+            'hero_slides',
+            'highlights',
+            'overview',
+            'stats',
+            'values',
+            'featured_images',
+            'trust_metrics',
+            'school',
+            'contact',
+            'footer',
+        ];
+
+        foreach ($homepageSections as $section) {
+            if (! empty($homepage[$section])) {
+                SiteSetting::set('homepage', $section, $homepage[$section]);
+            }
+        }
+
+        if (! empty($homepage['catalogue'])) {
+            SiteSetting::set('homepage', 'catalogue', array_intersect_key(
+                $homepage['catalogue'],
+                array_flip(['eyebrow', 'title', 'lead', 'image_primary', 'image_secondary'])
+            ));
+        }
     }
 }

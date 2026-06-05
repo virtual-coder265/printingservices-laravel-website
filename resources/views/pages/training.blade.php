@@ -13,7 +13,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div class="relative reveal-fade-in">
                     <div class="quote-request-card p-4 overflow-hidden">
-                        <img src="{{ asset($page['school']['image']) }}" alt="{{ $page['school']['title'] }}" class="w-full h-80 object-cover rounded-xl">
+                        <img src="{{ media_url($page['school']['image']) }}" alt="{{ $page['school']['title'] }}" class="w-full h-80 object-cover rounded-xl">
                     </div>
                 </div>
 
