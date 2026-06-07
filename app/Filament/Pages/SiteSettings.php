@@ -90,7 +90,7 @@ class SiteSettings extends Page implements HasForms
                                 Forms\Components\Placeholder::make('logo_preview')
                                     ->label('Current logo preview')
                                     ->content(function (Get $get): HtmlString|string {
-                                        $path = $get('logo') ?: $get('logo_existing');
+                                        $path = $this->resolveUploadedPath($get('logo'), $get('logo_existing'));
 
                                         if (! media_exists($path)) {
                                             return 'No logo uploaded yet.';
@@ -109,7 +109,10 @@ class SiteSettings extends Page implements HasForms
                                 Forms\Components\Placeholder::make('favicon_preview')
                                     ->label('Current favicon preview')
                                     ->content(function (Get $get): HtmlString|string {
-                                        $path = $get('favicon') ?: $get('favicon_existing') ?: $get('logo_existing');
+                                        $path = $this->resolveUploadedPath(
+                                            $get('favicon'),
+                                            $get('favicon_existing') ?? $get('logo_existing')
+                                        );
 
                                         if (! media_exists($path)) {
                                             return 'No favicon uploaded yet.';
@@ -184,7 +187,13 @@ class SiteSettings extends Page implements HasForms
     protected function resolveUploadedPath(mixed $uploaded, ?string $existing): ?string
     {
         if (filled($uploaded)) {
-            return is_array($uploaded) ? ($uploaded[0] ?? $existing) : $uploaded;
+            if (is_array($uploaded)) {
+                $path = collect($uploaded)->first(fn ($value) => filled($value));
+
+                return filled($path) ? (string) $path : $existing;
+            }
+
+            return (string) $uploaded;
         }
 
         return $existing;
