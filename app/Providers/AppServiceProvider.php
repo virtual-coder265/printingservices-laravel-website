@@ -63,12 +63,6 @@ class AppServiceProvider extends ServiceProvider
             return;
         }
 
-        URL::forceRootUrl($appUrl);
-
-        if (parse_url($appUrl, PHP_URL_SCHEME) === 'https') {
-            URL::forceScheme('https');
-        }
-
         $basePath = parse_url($appUrl, PHP_URL_PATH) ?: '';
         $basePath = rtrim($basePath, '/');
 

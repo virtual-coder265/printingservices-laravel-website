@@ -301,7 +301,7 @@
                     <ul class="space-y-4 text-sm">
                         @foreach ($page['footer']['links'] as $link)
                             <li>
-                                <a href="{{ $link['href'] }}" class="hover:text-gold-500 transition-colors duration-150 flex items-center">
+                                <a href="{{ isset($link['route']) ? route($link['route']) : ($link['href'] ?? '#') }}" class="hover:text-gold-500 transition-colors duration-150 flex items-center">
                                     <i data-lucide="chevron-right" class="w-4 h-4 mr-2 text-slate-700"></i> {{ $link['label'] }}
                                 </a>
                             </li>
