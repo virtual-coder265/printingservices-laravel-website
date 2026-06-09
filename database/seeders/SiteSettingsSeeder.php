@@ -36,6 +36,8 @@ class SiteSettingsSeeder extends Seeder
             'school',
             'contact',
             'footer',
+            'footer_services',
+            'teams',
         ];
 
         foreach ($homepageSections as $section) {

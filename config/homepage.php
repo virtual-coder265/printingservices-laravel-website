@@ -44,6 +44,7 @@ return [
         ['key' => 'products', 'label' => 'Products', 'route' => 'products'],
         ['key' => 'training', 'label' => 'Training', 'route' => 'training'],
         ['key' => 'about', 'label' => 'About Us', 'route' => 'about'],
+        ['key' => 'teams', 'label' => 'Team', 'route' => 'teams'],
         ['key' => 'contact', 'label' => 'Contact', 'route' => 'contact'],
     ],
 
@@ -536,6 +537,12 @@ return [
         ],
     ],
 
+    'teams' => [
+        'eyebrow' => 'Our People',
+        'title' => 'Meet Our Team',
+        'lead' => 'Get to know the professionals behind Government Press. Our team brings decades of printing expertise, customer service, and technical skill to every project.',
+    ],
+
     'contact' => [
         'eyebrow' => 'Get In Touch',
         'title' => 'Let\'s Discuss Your Printing Needs',
@@ -562,6 +569,7 @@ return [
         'links' => [
             ['label' => 'Home', 'route' => 'home'],
             ['label' => 'About Us', 'route' => 'about'],
+            ['label' => 'Team', 'route' => 'teams'],
             ['label' => 'Services', 'route' => 'services'],
             ['label' => 'Products', 'route' => 'products'],
             ['label' => 'Training', 'route' => 'training'],

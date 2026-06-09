@@ -56,7 +56,6 @@ class HomePageEditor extends Page implements HasForms
             'contact' => $this->normalizeContact(
                 SiteSetting::get('homepage', 'contact') ?? $defaults['contact'] ?? []
             ),
-            'footer' => SiteSetting::get('homepage', 'footer') ?? $defaults['footer'] ?? [],
         ]);
     }
 
@@ -81,7 +80,6 @@ class HomePageEditor extends Page implements HasForms
         SiteSetting::set('homepage', 'trust_metrics', $data['trust_metrics'] ?? []);
         SiteSetting::set('homepage', 'school', $this->denormalizeSchool($data['school'] ?? []));
         SiteSetting::set('homepage', 'contact', $this->denormalizeContact($data['contact'] ?? []));
-        SiteSetting::set('homepage', 'footer', $data['footer'] ?? []);
 
         Notification::make()->title('Home page content saved')->success()->send();
     }

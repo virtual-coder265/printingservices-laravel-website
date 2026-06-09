@@ -6,6 +6,7 @@ use App\Models\Page;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\SiteSetting;
+use App\Models\TeamMember;
 
 class SiteContentService
 {
@@ -18,6 +19,10 @@ class SiteContentService
         $page['catalogue'] = array_merge($page['catalogue'] ?? [], [
             'products' => $this->getProductsForPublic(),
         ]);
+
+        if ($currentPage === 'teams') {
+            $page['team_members'] = $this->getTeamMembersForPublic();
+        }
 
         return [
             'page' => $page,
@@ -63,6 +68,8 @@ class SiteContentService
             'school',
             'contact',
             'footer',
+            'footer_services',
+            'teams',
         ];
 
         foreach ($sectionKeys as $key) {
@@ -130,5 +137,23 @@ class SiteContentService
     public function getPublishedPages()
     {
         return Page::query()->where('is_published', true)->orderBy('title')->get();
+    }
+
+    public function getTeamMembersForPublic(): array
+    {
+        return TeamMember::query()
+            ->where('is_published', true)
+            ->orderBy('sort_order')
+            ->get()
+            ->map(fn (TeamMember $member) => [
+                'name' => $member->name,
+                'title' => $member->title,
+                'department' => $member->department,
+                'email' => $member->email,
+                'phone' => $member->phone,
+                'photo' => $member->photo,
+                'bio' => $member->bio,
+            ])
+            ->all();
     }
 }

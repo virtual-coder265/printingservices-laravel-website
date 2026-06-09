@@ -23,7 +23,6 @@ class HomePageFormSchema
                     self::trustMetricsTab(),
                     self::schoolTab(),
                     self::contactTab(),
-                    self::footerTab(),
                 ])
                 ->columnSpanFull()
                 ->persistTabInQueryString(),
@@ -295,29 +294,6 @@ class HomePageFormSchema
                         ->itemLabel(fn (array $state): ?string => $state['text'] ?? null)
                         ->columnSpanFull(),
                 ])->columns(2),
-            ]);
-    }
-
-    protected static function footerTab(): Forms\Components\Tabs\Tab
-    {
-        return Forms\Components\Tabs\Tab::make('Footer')
-            ->icon('heroicon-o-bars-3-bottom-left')
-            ->schema([
-                Forms\Components\Textarea::make('footer.summary')
-                    ->label('Footer summary')
-                    ->rows(3)
-                    ->columnSpanFull(),
-                Forms\Components\Repeater::make('footer.links')
-                    ->label('Footer links')
-                    ->schema([
-                        Forms\Components\TextInput::make('label')->required()->maxLength(255),
-                        Forms\Components\TextInput::make('href')->required()->maxLength(255),
-                    ])
-                    ->columns(2)
-                    ->collapsible()
-                    ->cloneable()
-                    ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
-                    ->columnSpanFull(),
             ]);
     }
 }

@@ -14,6 +14,7 @@ class RoleAndPermissionSeeder extends Seeder
             'view_any_page', 'view_page', 'create_page', 'update_page', 'delete_page',
             'view_any_document', 'view_document', 'create_document', 'update_document', 'delete_document',
             'view_any_vacancy', 'view_vacancy', 'create_vacancy', 'update_vacancy', 'delete_vacancy',
+            'view_any_team_member', 'view_team_member', 'create_team_member', 'update_team_member', 'delete_team_member',
             'view_any_service_category', 'view_service_category', 'create_service_category', 'update_service_category', 'delete_service_category',
             'view_any_service', 'view_service', 'create_service', 'update_service', 'delete_service',
             'view_any_product', 'view_product', 'create_product', 'update_product', 'delete_product',
@@ -27,7 +28,7 @@ class RoleAndPermissionSeeder extends Seeder
             'view_any_customer_profile', 'view_customer_profile', 'create_customer_profile', 'update_customer_profile', 'delete_customer_profile',
             'view_any_user', 'view_user', 'create_user', 'update_user', 'delete_user',
             'view_any_role', 'view_role', 'create_role', 'update_role', 'delete_role',
-            'page_site_settings', 'page_homepage_editor', 'page_erp_dashboard',
+            'page_site_settings', 'page_homepage_editor', 'page_footer_editor', 'page_erp_dashboard',
             'push_quotation_to_erp', 'push_order_to_erp', 'sync_erp_catalog',
         ];
 
@@ -41,8 +42,10 @@ class RoleAndPermissionSeeder extends Seeder
                 'view_any_page', 'view_page', 'create_page', 'update_page', 'delete_page',
                 'view_any_document', 'view_document', 'create_document', 'update_document', 'delete_document',
                 'view_any_vacancy', 'view_vacancy', 'create_vacancy', 'update_vacancy', 'delete_vacancy',
+                'view_any_team_member', 'view_team_member', 'create_team_member', 'update_team_member', 'delete_team_member',
                 'page_site_settings',
                 'page_homepage_editor',
+                'page_footer_editor',
                 'view_any_service', 'view_service', 'update_service',
                 'view_any_product', 'view_product', 'update_product',
             ],

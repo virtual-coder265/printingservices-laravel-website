@@ -14,6 +14,7 @@ Route::get('/services', [PublicPageController::class, 'services'])->name('servic
 Route::get('/products', [PublicPageController::class, 'products'])->name('products');
 Route::get('/training', [PublicPageController::class, 'training'])->name('training');
 Route::get('/about', [PublicPageController::class, 'about'])->name('about');
+Route::get('/teams', [PublicPageController::class, 'teams'])->name('teams');
 Route::get('/contact', [PublicPageController::class, 'contact'])->name('contact');
 Route::get('/quotation', [PublicPageController::class, 'quotation'])->name('quotation');
 Route::get('/request-quotation', fn () => redirect()->route('quotation'));

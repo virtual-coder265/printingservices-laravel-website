@@ -45,6 +45,11 @@ class PublicPageController extends Controller
         return view('pages.about', $this->pageData('about'));
     }
 
+    public function teams()
+    {
+        return view('pages.teams', $this->pageData('teams'));
+    }
+
     public function contact()
     {
         return view('pages.contact', $this->pageData('contact'));
