@@ -560,11 +560,12 @@ return [
     'footer' => [
         'summary' => 'For over 130 years, Government Press has been Malawi\'s trusted partner for professional, reliable printing services. Whether you\'re a government ministry, nonprofit organization, or private business, we\'re here to help your next printing project succeed.',
         'links' => [
-            ['label' => 'About', 'href' => '/overview'],
-            ['label' => 'Services', 'href' => '/services'],
-            ['label' => 'Catalogue', 'href' => '/catalogue'],
-            ['label' => 'Training School', 'href' => '/school'],
-            ['label' => 'Contact', 'href' => '/contact'],
+            ['label' => 'Home', 'href' => route('home')],
+            ['label' => 'About Us', 'href' => route('about')],
+            ['label' => 'Services', 'href' => route('services')],
+            ['label' => 'Products', 'href' => route('products')],
+            ['label' => 'Training', 'href' => route('training')],
+            ['label' => 'Contact', 'href' => route('contact')],
         ],
     ],
 ];
