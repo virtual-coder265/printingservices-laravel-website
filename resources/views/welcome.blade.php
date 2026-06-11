@@ -3,12 +3,7 @@
 @php
     $heroSlide = $page['hero_slides'][0] ?? null;
     $featuredServices = collect($page['services'])->take(4)->values();
-    $serviceImages = [
-        $page['overview']['image_primary'],
-        $page['catalogue']['image_primary'],
-        $page['catalogue']['image_secondary'],
-        $page['school']['image'],
-    ];
+    $serviceImages = $page['service_images'] ?? [];
 @endphp
 
 @section('content')
@@ -220,7 +215,7 @@
                 @foreach ($featuredServices as $index => $service)
                     @php
                         $lucideIcon = $page['service_icons'][$service['icon']] ?? 'printer';
-                        $image = $serviceImages[$index] ?? $page['overview']['image_primary'];
+                        $image = $serviceImages[$service['icon']] ?? $page['overview']['image_primary'];
                     @endphp
                     <div class="service-card-dark rounded-2xl overflow-hidden flex flex-col justify-between reveal-fade-up" @if ($index > 0) style="transition-delay: {{ $index * 0.05 }}s;" @endif>
                         <div>

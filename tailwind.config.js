@@ -21,7 +21,7 @@ export default {
                 },
                 gold: {
                     400: '#d4bc96',
-                    500: '#C5A880',
+                    500: '#DC3D3D',
                 },
                 'green-accent': '#198240',
             },

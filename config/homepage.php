@@ -191,7 +191,7 @@ return [
             'eyebrow' => '',
             'title' => 'Your Trusted Partner for Professional Printing',
             'description' => 'Whether you need official documents, reports, certificates, brochures, banners, or promotional materials, our experienced team is ready to deliver high-quality printing you can trust.',
-            'image' => 'images/home/facility-floor.png',
+            'image' => 'images/banner-1.png',
             'primary_label' => 'Request Quotation',
             'primary_href' => '#contact',
             'secondary_label' => 'Explore Services',                                              
@@ -206,7 +206,7 @@ return [
             'eyebrow' => 'Our Facilities',
             'title' => 'Modern Equipment. Experienced Hands. Outstanding Results.',
             'description' => 'We invest in the latest printing technology and work with skilled professionals who take pride in delivering excellence on every project, every time.',
-            'image' => 'images/home/facility-floor.png',
+            'image' => 'images/banner-2.png',
             'primary_label' => 'See Our Work',
             'primary_href' => '#catalogue',
             'secondary_label' => 'How We Work',
@@ -221,7 +221,7 @@ return [
             'eyebrow' => 'Secure & Confidential',
             'title' => 'Peace of Mind for Your Sensitive Documents',
             'description' => 'We specialize in secure, confidential printing for sensitive materials like certificates, exam papers, official records, and secure documents—where privacy and integrity matter most.',
-            'image' => 'images/home/manual-cover.webp',
+            'image' => 'images/banner-3.png',
             'primary_label' => 'Secure Printing Service',
             'primary_href' => '#services',
             'secondary_label' => 'Contact Our Team',
@@ -236,7 +236,7 @@ return [
             'eyebrow' => 'Invest in Skills',
             'title' => 'Building Tomorrow\'s Printing Professionals',
             'description' => 'Want to develop printing skills? Our TEVETA-accredited training school offers hands-on learning in modern printing technology and professional production practices.',
-            'image' => 'images/home/speech-cover.webp',
+            'image' => 'images/banner-4.png',
             'primary_label' => 'Explore Training',
             'primary_href' => '#school',
             'secondary_label' => 'Get In Touch',
@@ -251,7 +251,7 @@ return [
             'eyebrow' => 'Complete Solutions',
             'title' => 'From Your Idea to Your Finished Print Product',
             'description' => 'We handle every stage of your project—design support, professional printing, binding, finishing, and delivery—so you get exactly what you need, on time and on budget.',
-            'image' => 'images/home/manual-cover.webp',
+            'image' => 'images/banner-5.png',
             'primary_label' => 'Explore Services',
             'primary_href' => '#services',
             'secondary_label' => 'Request A Quote',
@@ -307,6 +307,19 @@ return [
         'design' => 'pen-tool',
         'finish' => 'layers',
         'school' => 'graduation-cap',
+    ],
+
+    'service_images' => [
+        'shield' => 'images/secure-printing.png',
+        'publication' => 'images/govt-publications.png',
+        'press' => 'images/banner-1.png',
+        'design' => 'images/proof-reading.png',
+        'finish' => 'images/banner-2.png',
+        'school' => 'images/training-school.png',
+    ],
+
+    'page_hero' => [
+        'image' => 'images/thumbnail.png',
     ],
 
     'footer_services' => [
@@ -486,7 +499,7 @@ return [
         ],
         'cta_label' => 'Register Interest',
         'cta_href' => '#contact',
-        'image' => 'images/home/speech-cover.webp',
+        'image' => 'images/training-school2.png',
     ],
 
     'updates' => [

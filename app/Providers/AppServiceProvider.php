@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->configurePasswordDefaults();
         $this->configureApplicationUrl();
         $this->configureRateLimiting();
 
@@ -45,11 +47,32 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(Login::class, \App\Listeners\MergeGuestCart::class);
     }
 
+    protected function configurePasswordDefaults(): void
+    {
+        $minLength = (int) config('customer_auth.password.min_length', 10);
+
+        Password::defaults(function () use ($minLength) {
+            $rule = Password::min($minLength)
+                ->mixedCase()
+                ->numbers()
+                ->symbols();
+
+            return app()->environment('testing') ? $rule : $rule->uncompromised();
+        });
+    }
+
     protected function configureRateLimiting(): void
     {
         RateLimiter::for('quotation-submit', function (Request $request) {
             $max = config('quotation_requests.rate_limit.max_attempts', 5);
             $minutes = config('quotation_requests.rate_limit.decay_minutes', 60);
+
+            return Limit::perMinutes($minutes, $max)->by($request->ip());
+        });
+
+        RateLimiter::for('customer-register', function (Request $request) {
+            $max = config('customer_auth.rate_limit.max_attempts', 5);
+            $minutes = config('customer_auth.rate_limit.decay_minutes', 60);
 
             return Limit::perMinutes($minutes, $max)->by($request->ip());
         });
