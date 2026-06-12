@@ -73,7 +73,10 @@ class SiteContentService
 
         foreach ($sectionKeys as $key) {
             $value = SiteSetting::get('homepage', $key);
-            if ($value !== null) {
+
+            // Empty settings (e.g. a repeater saved with no items) must not wipe
+            // out the config defaults, otherwise sections render without content.
+            if (filled($value)) {
                 $config[$key] = $value;
             }
         }

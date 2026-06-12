@@ -120,9 +120,15 @@ class HomePageEditor extends Page implements HasForms
 
     protected function normalizeCatalogue(array $catalogue): array
     {
-        return array_intersect_key($catalogue, array_flip([
-            'eyebrow', 'title', 'lead', 'image_primary', 'image_secondary',
+        $catalogue = array_intersect_key($catalogue, array_flip([
+            'eyebrow', 'title', 'lead', 'cta_label', 'cta_href', 'scroll_speed', 'cards', 'gallery',
         ]));
+
+        $catalogue['scroll_speed'] = $catalogue['scroll_speed'] ?? 'normal';
+        $catalogue['cards'] = array_values(array_filter((array) ($catalogue['cards'] ?? []), 'is_array'));
+        $catalogue['gallery'] = array_values(array_filter((array) ($catalogue['gallery'] ?? []), 'is_string'));
+
+        return $catalogue;
     }
 
     protected function denormalizeCatalogue(array $catalogue): array

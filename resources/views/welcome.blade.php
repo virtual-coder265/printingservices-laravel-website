@@ -242,48 +242,92 @@
     </section>
 
     @php
-        $catalogueImages = collect($page['featured_images'] ?? [])->values();
-        $catalogueCards = collect($page['catalogue']['products'] ?? [])->values()->map(function ($product, $index) use ($catalogueImages) {
-            $featured = $catalogueImages->isNotEmpty() ? $catalogueImages[$index % $catalogueImages->count()] : null;
+        $catalogueSettings = $page['catalogue'] ?? [];
 
-            return [
-                'index' => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
-                'name' => $product['name'] ?? '',
-                'type' => $product['type'] ?? '',
-                'note' => $product['note'] ?? '',
-                'image' => $featured['image'] ?? null,
-                'alt' => $featured['alt'] ?? ($product['name'] ?? ''),
-            ];
-        });
-
-        if ($catalogueCards->isEmpty()) {
-            $catalogueCards = $catalogueImages->map(fn ($featured, $index) => [
-                'index' => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
-                'name' => $featured['alt'] ?? '',
-                'type' => '',
-                'note' => '',
-                'image' => $featured['image'] ?? null,
-                'alt' => $featured['alt'] ?? '',
+        // Admin-managed showcase cards (Home Page editor → Catalogue tab) take priority.
+        $catalogueCards = collect($catalogueSettings['cards'] ?? [])
+            ->filter(fn ($card) => is_array($card) && (filled($card['name'] ?? null) || filled($card['image'] ?? null)))
+            ->values()
+            ->map(fn ($card) => [
+                'name' => $card['name'] ?? '',
+                'type' => $card['type'] ?? '',
+                'note' => $card['note'] ?? '',
+                'image' => $card['image'] ?? null,
+                'alt' => filled($card['name'] ?? null) ? $card['name'] : 'Printed product showcase',
             ]);
+
+        // Bulk-uploaded gallery images become image-only cards at the end of the scroller.
+        $catalogueCards = $catalogueCards->concat(
+            collect($catalogueSettings['gallery'] ?? [])
+                ->filter(fn ($image) => is_string($image) && filled($image))
+                ->values()
+                ->map(fn ($image) => [
+                    'name' => '',
+                    'type' => '',
+                    'note' => '',
+                    'image' => $image,
+                    'alt' => 'Printed product showcase',
+                ])
+        );
+
+        // Fallback: pair active products with the featured gallery images.
+        if ($catalogueCards->isEmpty()) {
+            $catalogueImages = collect($page['featured_images'] ?? [])->values();
+            $catalogueCards = collect($catalogueSettings['products'] ?? [])->values()->map(function ($product, $index) use ($catalogueImages) {
+                $featured = $catalogueImages->isNotEmpty() ? $catalogueImages[$index % $catalogueImages->count()] : null;
+
+                return [
+                    'name' => $product['name'] ?? '',
+                    'type' => $product['type'] ?? '',
+                    'note' => $product['note'] ?? '',
+                    'image' => $featured['image'] ?? null,
+                    'alt' => $featured['alt'] ?? ($product['name'] ?? ''),
+                ];
+            });
+
+            if ($catalogueCards->isEmpty()) {
+                $catalogueCards = $catalogueImages->map(fn ($featured) => [
+                    'name' => $featured['alt'] ?? '',
+                    'type' => '',
+                    'note' => '',
+                    'image' => $featured['image'] ?? null,
+                    'alt' => $featured['alt'] ?? '',
+                ]);
+            }
         }
+
+        $catalogueCards = $catalogueCards->values()->map(fn ($card, $index) => array_merge($card, [
+            'index' => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
+        ]));
+
+        $catalogueChips = $catalogueCards->filter(fn ($card) => filled($card['name']))->values();
+
+        $catalogueSpeeds = ['slow' => '70s', 'normal' => '45s', 'fast' => '26s'];
+        $catalogueSpeed = $catalogueSpeeds[$catalogueSettings['scroll_speed'] ?? 'normal'] ?? '45s';
+
+        $catalogueCtaLabel = filled($catalogueSettings['cta_label'] ?? null) ? $catalogueSettings['cta_label'] : 'Request Quotation';
+        $catalogueCtaHref = filled($catalogueSettings['cta_href'] ?? null) ? $catalogueSettings['cta_href'] : route('quotation');
 
         $marqueeRows = $catalogueCards->count() > 3
             ? $catalogueCards->split(2)
             : collect([$catalogueCards]);
 
         // Each row must be wide enough for a seamless -50% loop, so short rows repeat their cards.
-        $marqueeRows = $marqueeRows->map(function ($row) {
-            $cards = $row->values();
+        $marqueeRows = $marqueeRows
+            ->filter(fn ($row) => $row->isNotEmpty())
+            ->values()
+            ->map(function ($row) {
+                $cards = $row->values();
 
-            while ($cards->count() < 6) {
-                $cards = $cards->concat($row->values());
-            }
+                while ($cards->count() < 6) {
+                    $cards = $cards->concat($row->values());
+                }
 
-            return $cards->values();
-        });
+                return $cards->values();
+            });
     @endphp
 
-    <section id="catalogue" class="py-24 section-surface-dark relative overflow-hidden border-t border-white/10">
+    <section id="catalogue" class="py-24 section-surface-dark relative overflow-hidden border-t border-white/10" style="--catalogue-speed: {{ $catalogueSpeed }};">
         <div class="catalogue-glow" aria-hidden="true"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -296,18 +340,20 @@
                         {{ $page['catalogue']['lead'] }}
                     </p>
 
-                    <div class="flex flex-wrap gap-2 pt-1">
-                        @foreach ($catalogueCards->take(4) as $card)
-                            <span class="catalogue-chip">{{ $card['name'] }}</span>
-                        @endforeach
-                        @if ($catalogueCards->count() > 4)
-                            <span class="catalogue-chip catalogue-chip--more">+{{ $catalogueCards->count() - 4 }} more</span>
-                        @endif
-                    </div>
+                    @if ($catalogueChips->isNotEmpty())
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            @foreach ($catalogueChips->take(4) as $card)
+                                <span class="catalogue-chip">{{ $card['name'] }}</span>
+                            @endforeach
+                            @if ($catalogueChips->count() > 4)
+                                <span class="catalogue-chip catalogue-chip--more">+{{ $catalogueChips->count() - 4 }} more</span>
+                            @endif
+                        </div>
+                    @endif
 
                     <div class="pt-4">
-                        <a href="{{ route('quotation') }}" class="btn-brand btn-brand-light-alt inline-flex px-5 py-3 text-xs">
-                            Request Quotation &nbsp;&rarr;
+                        <a href="{{ $catalogueCtaHref }}" class="btn-brand btn-brand-light-alt inline-flex px-5 py-3 text-xs">
+                            {{ $catalogueCtaLabel }} &nbsp;&rarr;
                         </a>
                     </div>
 
@@ -334,15 +380,19 @@
                                                     >
                                                 @endif
                                                 <span class="catalogue-card-index">{{ $card['index'] }}</span>
-                                                <div class="catalogue-card-overlay">
-                                                    @if ($card['type'])
-                                                        <span class="catalogue-card-type">{{ $card['type'] }}</span>
-                                                    @endif
-                                                    <h3 class="catalogue-card-name">{{ $card['name'] }}</h3>
-                                                    @if ($card['note'])
-                                                        <p class="catalogue-card-note">{{ $card['note'] }}</p>
-                                                    @endif
-                                                </div>
+                                                @if (filled($card['name']) || filled($card['type']) || filled($card['note']))
+                                                    <div class="catalogue-card-overlay">
+                                                        @if (filled($card['type']))
+                                                            <span class="catalogue-card-type">{{ $card['type'] }}</span>
+                                                        @endif
+                                                        @if (filled($card['name']))
+                                                            <h3 class="catalogue-card-name">{{ $card['name'] }}</h3>
+                                                        @endif
+                                                        @if (filled($card['note']))
+                                                            <p class="catalogue-card-note">{{ $card['note'] }}</p>
+                                                        @endif
+                                                    </div>
+                                                @endif
                                             </article>
                                         @endforeach
                                     </div>

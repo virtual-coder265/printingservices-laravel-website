@@ -49,7 +49,7 @@ class SiteSettingsSeeder extends Seeder
         if (! empty($homepage['catalogue'])) {
             SiteSetting::set('homepage', 'catalogue', array_intersect_key(
                 $homepage['catalogue'],
-                array_flip(['eyebrow', 'title', 'lead', 'image_primary', 'image_secondary'])
+                array_flip(['eyebrow', 'title', 'lead', 'cta_label', 'cta_href', 'scroll_speed', 'cards', 'gallery'])
             ));
         }
     }

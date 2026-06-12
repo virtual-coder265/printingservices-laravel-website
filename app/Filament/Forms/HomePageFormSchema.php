@@ -175,15 +175,77 @@ class HomePageFormSchema
         return Forms\Components\Tabs\Tab::make('Catalogue')
             ->icon('heroicon-o-squares-2x2')
             ->schema([
-                Forms\Components\Section::make('Catalogue section text')->schema([
+                Forms\Components\Section::make('Section text & settings')->schema([
                     Forms\Components\TextInput::make('catalogue.eyebrow')->label('Eyebrow')->maxLength(255),
+                    Forms\Components\Select::make('catalogue.scroll_speed')
+                        ->label('Auto-scroll speed')
+                        ->options([
+                            'slow' => 'Slow',
+                            'normal' => 'Normal',
+                            'fast' => 'Fast',
+                        ])
+                        ->default('normal')
+                        ->selectablePlaceholder(false),
                     Forms\Components\TextInput::make('catalogue.title')->label('Title')->required()->maxLength(255)->columnSpanFull(),
                     Forms\Components\Textarea::make('catalogue.lead')->label('Lead paragraph')->rows(3)->columnSpanFull(),
+                    Forms\Components\TextInput::make('catalogue.cta_label')
+                        ->label('Button label')
+                        ->placeholder('Request Quotation')
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('catalogue.cta_href')
+                        ->label('Button link')
+                        ->placeholder('Defaults to the quotation page')
+                        ->maxLength(255),
                 ])->columns(2),
-                Forms\Components\Section::make('Catalogue images')->schema([
-                    self::homepageImageUpload('catalogue.image_primary', 'Primary image', 160),
-                    self::homepageImageUpload('catalogue.image_secondary', 'Secondary image', 160),
-                ])->columns(2),
+                Forms\Components\Section::make('Showcase cards')
+                    ->description('These cards auto-scroll in the "What We Print" section. Drag to reorder them. If you leave this empty, the section automatically shows your active Products paired with the Featured Gallery images.')
+                    ->schema([
+                        Forms\Components\Repeater::make('catalogue.cards')
+                            ->label('Cards')
+                            ->schema([
+                                self::homepageImageUpload('image', 'Card image', 140),
+                                Forms\Components\TextInput::make('name')
+                                    ->label('Product name')
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('type')
+                                    ->label('Category label')
+                                    ->helperText('Shown in gold above the name on hover, e.g. "Large Format".')
+                                    ->maxLength(255),
+                                Forms\Components\Textarea::make('note')
+                                    ->label('Short description (revealed on hover)')
+                                    ->rows(2)
+                                    ->maxLength(500)
+                                    ->columnSpanFull(),
+                            ])
+                            ->columns(2)
+                            ->defaultItems(0)
+                            ->collapsible()
+                            ->cloneable()
+                            ->reorderableWithButtons()
+                            ->itemLabel(fn (array $state): ?string => filled($state['name'] ?? null) ? $state['name'] : 'Image card')
+                            ->columnSpanFull(),
+                    ]),
+                Forms\Components\Section::make('Quick gallery (bulk upload)')
+                    ->description('Upload several images at once. They are shown as image-only cards after the showcase cards above.')
+                    ->schema([
+                        Forms\Components\FileUpload::make('catalogue.gallery')
+                            ->label('Gallery images')
+                            ->image()
+                            ->multiple()
+                            ->reorderable()
+                            ->appendFiles()
+                            ->disk('public')
+                            ->directory('homepage')
+                            ->visibility('public')
+                            ->panelLayout('grid')
+                            ->imagePreviewHeight('120')
+                            ->maxSize(5120)
+                            ->maxFiles(20)
+                            ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
+                            ->downloadable()
+                            ->openable()
+                            ->columnSpanFull(),
+                    ]),
             ]);
     }
 
@@ -194,6 +256,7 @@ class HomePageFormSchema
             ->schema([
                 Forms\Components\Repeater::make('featured_images')
                     ->label('Featured carousel images')
+                    ->helperText('Used as fallback artwork for the "What We Print" scroller when no Showcase cards are defined in the Catalogue tab.')
                     ->schema([
                         self::homepageImageUpload('image', 'Image', 140),
                         Forms\Components\TextInput::make('alt')->label('Alt text')->required()->maxLength(255),

@@ -567,13 +567,13 @@ h6 {
 .catalogue-marquee-track {
     display: flex;
     width: max-content;
-    animation: catalogue-scroll 45s linear infinite;
+    animation: catalogue-scroll var(--catalogue-speed, 45s) linear infinite;
     will-change: transform;
 }
 
 .catalogue-marquee--reverse .catalogue-marquee-track {
     animation-direction: reverse;
-    animation-duration: 55s;
+    animation-duration: calc(var(--catalogue-speed, 45s) * 1.22);
 }
 
 .catalogue-marquee:hover .catalogue-marquee-track,
