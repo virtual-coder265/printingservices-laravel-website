@@ -148,6 +148,7 @@ class HomePageEditor extends Page implements HasForms
 
     protected function normalizeContact(array $contact): array
     {
+        $contact['po_boxes'] = $this->stringsToRepeater($contact['po_boxes'] ?? config('homepage.contact.po_boxes', []));
         $contact['locations'] = $this->stringsToRepeater($contact['locations'] ?? []);
         $contact['quote_checklist'] = $this->stringsToRepeater($contact['quote_checklist'] ?? []);
 
@@ -156,6 +157,7 @@ class HomePageEditor extends Page implements HasForms
 
     protected function denormalizeContact(array $contact): array
     {
+        $contact['po_boxes'] = $this->repeaterToStrings($contact['po_boxes'] ?? []);
         $contact['locations'] = $this->repeaterToStrings($contact['locations'] ?? []);
         $contact['quote_checklist'] = $this->repeaterToStrings($contact['quote_checklist'] ?? []);
 

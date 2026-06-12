@@ -322,12 +322,22 @@ return [
         'image' => 'images/thumbnail.png',
     ],
 
-    'footer_services' => [
-        ['icon' => 'shield-check', 'label' => 'Secure Printing', 'href' => '#services'],
-        ['icon' => 'book-open', 'label' => 'Government Publications', 'href' => '#services'],
-        ['icon' => 'printer', 'label' => 'General Print Production', 'href' => '#services'],
-        ['icon' => 'layers', 'label' => 'Finishing & Binding', 'href' => '#services'],
-        ['icon' => 'graduation-cap', 'label' => 'Printing Training School', 'href' => '#school'],
+    'footer_addresses' => [
+        [
+            'label' => 'Lilongwe - Production Office',
+            'address' => 'Along Chilambura Road, opposite Chipiku Stores, Lilongwe',
+            'map_url' => 'https://www.google.com/maps/search/?api=1&query=Chilambura+Road%2C+Lilongwe%2C+Malawi',
+        ],
+        [
+            'label' => 'Lilongwe - Corporate Office',
+            'address' => 'Lilongwe',
+            'map_url' => '',
+        ],
+        [
+            'label' => 'Zomba Office',
+            'address' => 'Opposite MANEB Offices, Zomba',
+            'map_url' => 'https://www.google.com/maps/search/?api=1&query=MANEB+Offices%2C+Zomba%2C+Malawi',
+        ],
     ],
 
     'overview' => [
@@ -565,6 +575,10 @@ return [
         'email' => 'printingservices@opc.gov.mw',
         'email_href' => 'mailto:printingservices@opc.gov.mw',
         'hours' => 'Monday to Friday',
+        'po_boxes' => [
+            'P.O. Box 216, Lilongwe',
+            'Private Bag 37, Zomba',
+        ],
         'locations' => [
             'Along Chilambura Road, opposite Chipiku Stores, Lilongwe.',
             'Opposite MANEB Offices, Zomba.',

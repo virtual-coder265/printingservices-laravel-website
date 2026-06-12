@@ -36,7 +36,7 @@ class SiteSettingsSeeder extends Seeder
             'school',
             'contact',
             'footer',
-            'footer_services',
+            'footer_addresses',
             'teams',
         ];
 

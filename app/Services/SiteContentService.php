@@ -66,9 +66,8 @@ class SiteContentService
             'featured_images',
             'trust_metrics',
             'school',
-            'contact',
             'footer',
-            'footer_services',
+            'footer_addresses',
             'teams',
         ];
 
@@ -77,6 +76,13 @@ class SiteContentService
             if ($value !== null) {
                 $config[$key] = $value;
             }
+        }
+
+        // Merged (not replaced) so newly added keys keep their config defaults
+        // until they are saved from the admin panel.
+        $contact = SiteSetting::get('homepage', 'contact');
+        if ($contact !== null) {
+            $config['contact'] = array_merge($config['contact'] ?? [], $contact);
         }
 
         $catalogue = SiteSetting::get('homepage', 'catalogue');

@@ -36,7 +36,7 @@ class FooterEditor extends Page implements HasForms
         $defaults = config('homepage', []);
 
         $footer = SiteSetting::get('homepage', 'footer') ?? $defaults['footer'] ?? [];
-        $footerServices = SiteSetting::get('homepage', 'footer_services') ?? $defaults['footer_services'] ?? [];
+        $footerAddresses = SiteSetting::get('homepage', 'footer_addresses') ?? $defaults['footer_addresses'] ?? [];
         $socialLinks = SiteSetting::get('utility', 'social_links') ?? $defaults['utility']['social_links'] ?? [];
         $teams = SiteSetting::get('homepage', 'teams') ?? $defaults['teams'] ?? [];
 
@@ -45,7 +45,7 @@ class FooterEditor extends Page implements HasForms
                 'summary' => $footer['summary'] ?? '',
                 'links' => $this->normalizeFooterLinks($footer['links'] ?? []),
             ],
-            'footer_services' => $footerServices,
+            'footer_addresses' => $footerAddresses,
             'social_links' => $socialLinks,
             'teams' => $teams,
         ]);
@@ -82,27 +82,34 @@ class FooterEditor extends Page implements HasForms
                         ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
                         ->columnSpanFull(),
                 ]),
-                Forms\Components\Section::make('Services column')->schema([
-                    Forms\Components\Repeater::make('footer_services')
-                        ->label('Footer service links')
-                        ->schema([
-                            Forms\Components\Select::make('icon')
-                                ->options($this->iconOptions())
-                                ->required()
-                                ->searchable(),
-                            Forms\Components\TextInput::make('label')
-                                ->required()
-                                ->maxLength(255),
-                            Forms\Components\TextInput::make('href')
-                                ->required()
-                                ->maxLength(255),
-                        ])
-                        ->columns(3)
-                        ->collapsible()
-                        ->cloneable()
-                        ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
-                        ->columnSpanFull(),
-                ]),
+                Forms\Components\Section::make('Physical addresses')
+                    ->description('Office locations shown in the footer, each with an optional Google Maps link.')
+                    ->schema([
+                        Forms\Components\Repeater::make('footer_addresses')
+                            ->label('Offices')
+                            ->schema([
+                                Forms\Components\TextInput::make('label')
+                                    ->label('Office name')
+                                    ->placeholder('e.g. Lilongwe - Production Office')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('address')
+                                    ->label('Physical address')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('map_url')
+                                    ->label('Google Maps link')
+                                    ->url()
+                                    ->maxLength(2048)
+                                    ->helperText('Paste a Google Maps share link. Leave empty to show the address without a link.')
+                                    ->columnSpanFull(),
+                            ])
+                            ->columns(2)
+                            ->collapsible()
+                            ->cloneable()
+                            ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
+                            ->columnSpanFull(),
+                    ]),
                 Forms\Components\Section::make('Social links')->schema([
                     Forms\Components\Repeater::make('social_links')
                         ->label('Social media links')
@@ -141,7 +148,7 @@ class FooterEditor extends Page implements HasForms
             'summary' => $data['footer']['summary'] ?? '',
             'links' => $this->denormalizeFooterLinks($data['footer']['links'] ?? []),
         ]);
-        SiteSetting::set('homepage', 'footer_services', $data['footer_services'] ?? []);
+        SiteSetting::set('homepage', 'footer_addresses', $data['footer_addresses'] ?? []);
         SiteSetting::set('utility', 'social_links', $data['social_links'] ?? []);
         SiteSetting::set('homepage', 'teams', $data['teams'] ?? []);
 
@@ -153,21 +160,6 @@ class FooterEditor extends Page implements HasForms
         return collect(config('homepage.public_menu', []))
             ->pluck('label', 'route')
             ->all();
-    }
-
-    protected function iconOptions(): array
-    {
-        return [
-            'shield-check' => 'Shield check',
-            'book-open' => 'Book open',
-            'printer' => 'Printer',
-            'layers' => 'Layers',
-            'graduation-cap' => 'Graduation cap',
-            'phone' => 'Phone',
-            'mail' => 'Mail',
-            'users' => 'Users',
-            'map-pin' => 'Map pin',
-        ];
     }
 
     protected function socialIconOptions(): array

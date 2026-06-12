@@ -310,13 +310,20 @@
                 </div>
 
                 <div>
-                    <h3 class="text-sm font-semibold text-slate-100 uppercase tracking-widest mb-6 font-display border-l-2 border-gold-500 pl-3">Services</h3>
-                    <ul class="space-y-4 text-sm">
-                        @foreach ($page['footer_services'] as $service)
-                            <li>
-                                <a href="{{ $service['href'] }}" class="hover:text-gold-500 transition-colors duration-150 flex items-center">
-                                    <i data-lucide="{{ $service['icon'] }}" class="w-4 h-4 mr-2 text-slate-700"></i> {{ $service['label'] }}
-                                </a>
+                    <h3 class="text-sm font-semibold text-slate-100 uppercase tracking-widest mb-6 font-display border-l-2 border-gold-500 pl-3">Physical Addresses</h3>
+                    <ul class="space-y-5 text-sm">
+                        @foreach ($page['footer_addresses'] ?? [] as $address)
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="map-pin" class="w-5 h-5 text-gold-500 shrink-0 mt-0.5"></i>
+                                <div class="space-y-1">
+                                    <p class="text-slate-100 font-medium">{{ $address['label'] }}</p>
+                                    <p>{{ $address['address'] }}</p>
+                                    @if (filled($address['map_url'] ?? null))
+                                        <a href="{{ $address['map_url'] }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-gold-500 hover:text-gold-400 transition-colors duration-150">
+                                            View on Google Maps <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                                        </a>
+                                    @endif
+                                </div>
                             </li>
                         @endforeach
                     </ul>
@@ -325,10 +332,10 @@
                 <div class="space-y-4 text-sm">
                     <h3 class="text-sm font-semibold text-slate-100 uppercase tracking-widest mb-6 font-display border-l-2 border-gold-500 pl-3">Contact Information</h3>
 
-                    @foreach ($page['contact']['locations'] as $location)
+                    @foreach ($page['contact']['po_boxes'] ?? [] as $poBox)
                         <div class="flex items-start gap-3">
-                            <i data-lucide="map-pin" class="w-5 h-5 text-gold-500 shrink-0 mt-0.5"></i>
-                            <span>{{ $location }}</span>
+                            <i data-lucide="mailbox" class="w-5 h-5 text-gold-500 shrink-0 mt-0.5"></i>
+                            <span>{{ $poBox }}</span>
                         </div>
                     @endforeach
 

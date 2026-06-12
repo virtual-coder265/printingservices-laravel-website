@@ -497,6 +497,255 @@ h6 {
     border-color: var(--color-gold-500);
 }
 
+/* ── Catalogue marquee (What We Print) ───────────────────────── */
+
+.catalogue-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 55% 60% at 85% 20%, rgba(25, 130, 64, 0.16), transparent 70%),
+        radial-gradient(ellipse 40% 50% at 10% 90%, rgba(202, 128, 108, 0.1), transparent 70%);
+}
+
+.catalogue-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background-color: rgba(255, 255, 255, 0.04);
+    color: #cbd5e1;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+}
+
+.catalogue-chip:hover {
+    border-color: var(--color-gold-500);
+    color: var(--color-gold-500);
+    background-color: rgba(202, 128, 108, 0.08);
+}
+
+.catalogue-chip--more {
+    border-style: dashed;
+    color: #64748b;
+}
+
+.catalogue-live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: var(--color-brand-green);
+    box-shadow: 0 0 0 0 rgba(25, 130, 64, 0.6);
+    animation: catalogue-dot-pulse 2.2s infinite;
+}
+
+@keyframes catalogue-dot-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(25, 130, 64, 0.6);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(25, 130, 64, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(25, 130, 64, 0);
+    }
+}
+
+.catalogue-marquee {
+    position: relative;
+    overflow: hidden;
+    /* Fade the cards out at both edges for a softer entrance/exit */
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.catalogue-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: catalogue-scroll 45s linear infinite;
+    will-change: transform;
+}
+
+.catalogue-marquee--reverse .catalogue-marquee-track {
+    animation-direction: reverse;
+    animation-duration: 55s;
+}
+
+.catalogue-marquee:hover .catalogue-marquee-track,
+.catalogue-marquee:focus-within .catalogue-marquee-track {
+    animation-play-state: paused;
+}
+
+@keyframes catalogue-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.catalogue-marquee-group {
+    display: flex;
+    gap: 1.25rem;
+    padding-right: 1.25rem;
+}
+
+.catalogue-card {
+    position: relative;
+    width: 240px;
+    height: 170px;
+    flex-shrink: 0;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 15px 35px -15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s ease, box-shadow 0.45s ease;
+    cursor: pointer;
+}
+
+@media (min-width: 640px) {
+    .catalogue-card {
+        width: 280px;
+        height: 190px;
+    }
+}
+
+.catalogue-card:hover,
+.catalogue-card:focus-visible {
+    transform: translateY(-6px) scale(1.02);
+    border-color: rgba(202, 128, 108, 0.6);
+    box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(202, 128, 108, 0.25);
+    z-index: 2;
+}
+
+.catalogue-card-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.05);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+}
+
+.catalogue-card:hover .catalogue-card-image,
+.catalogue-card:focus-visible .catalogue-card-image {
+    transform: scale(1.12);
+    filter: brightness(0.55);
+}
+
+.catalogue-card-index {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.85rem;
+    z-index: 2;
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.55);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+    transition: color 0.4s ease;
+}
+
+.catalogue-card:hover .catalogue-card-index {
+    color: var(--color-gold-500);
+}
+
+.catalogue-card-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1rem 1.1rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.25) 55%, transparent 100%);
+}
+
+.catalogue-card-type {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--color-gold-500);
+    margin-bottom: 0.3rem;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease 0.05s, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.05s;
+}
+
+.catalogue-card-name {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.25;
+    transform: translateY(0);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.catalogue-card-note {
+    font-size: 0.68rem;
+    line-height: 1.45;
+    color: #cbd5e1;
+    margin-top: 0.35rem;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(8px);
+    transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease 0.1s, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+}
+
+.catalogue-card:hover .catalogue-card-type,
+.catalogue-card:focus-visible .catalogue-card-type {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.catalogue-card:hover .catalogue-card-note,
+.catalogue-card:focus-visible .catalogue-card-note {
+    max-height: 4.5rem;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .catalogue-marquee {
+        overflow-x: auto;
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+
+    .catalogue-marquee-track {
+        animation: none;
+    }
+
+    /* Without the animation the duplicated group is just noise */
+    .catalogue-marquee-group[aria-hidden='true'] {
+        display: none;
+    }
+
+    .catalogue-card,
+    .catalogue-card-image,
+    .catalogue-card-type,
+    .catalogue-card-note {
+        transition: none;
+    }
+
+    .catalogue-live-dot {
+        animation: none;
+    }
+}
+
 .reveal-fade-in {
     opacity: 0;
     transform: scale(0.97);

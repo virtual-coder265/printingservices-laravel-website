@@ -241,8 +241,51 @@
         </div>
     </section>
 
+    @php
+        $catalogueImages = collect($page['featured_images'] ?? [])->values();
+        $catalogueCards = collect($page['catalogue']['products'] ?? [])->values()->map(function ($product, $index) use ($catalogueImages) {
+            $featured = $catalogueImages->isNotEmpty() ? $catalogueImages[$index % $catalogueImages->count()] : null;
+
+            return [
+                'index' => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
+                'name' => $product['name'] ?? '',
+                'type' => $product['type'] ?? '',
+                'note' => $product['note'] ?? '',
+                'image' => $featured['image'] ?? null,
+                'alt' => $featured['alt'] ?? ($product['name'] ?? ''),
+            ];
+        });
+
+        if ($catalogueCards->isEmpty()) {
+            $catalogueCards = $catalogueImages->map(fn ($featured, $index) => [
+                'index' => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
+                'name' => $featured['alt'] ?? '',
+                'type' => '',
+                'note' => '',
+                'image' => $featured['image'] ?? null,
+                'alt' => $featured['alt'] ?? '',
+            ]);
+        }
+
+        $marqueeRows = $catalogueCards->count() > 3
+            ? $catalogueCards->split(2)
+            : collect([$catalogueCards]);
+
+        // Each row must be wide enough for a seamless -50% loop, so short rows repeat their cards.
+        $marqueeRows = $marqueeRows->map(function ($row) {
+            $cards = $row->values();
+
+            while ($cards->count() < 6) {
+                $cards = $cards->concat($row->values());
+            }
+
+            return $cards->values();
+        });
+    @endphp
+
     <section id="catalogue" class="py-24 section-surface-dark relative overflow-hidden border-t border-white/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="catalogue-glow" aria-hidden="true"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <div class="lg:col-span-4 space-y-6 reveal-fade-up">
                     <span class="text-xs font-semibold font-mono tracking-widest text-gold-500 uppercase block">{{ $page['catalogue']['eyebrow'] }}</span>
@@ -252,18 +295,58 @@
                     <p class="text-xs text-slate-300 leading-relaxed">
                         {{ $page['catalogue']['lead'] }}
                     </p>
+
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        @foreach ($catalogueCards->take(4) as $card)
+                            <span class="catalogue-chip">{{ $card['name'] }}</span>
+                        @endforeach
+                        @if ($catalogueCards->count() > 4)
+                            <span class="catalogue-chip catalogue-chip--more">+{{ $catalogueCards->count() - 4 }} more</span>
+                        @endif
+                    </div>
+
                     <div class="pt-4">
                         <a href="{{ route('quotation') }}" class="btn-brand btn-brand-light-alt inline-flex px-5 py-3 text-xs">
                             Request Quotation &nbsp;&rarr;
                         </a>
                     </div>
+
+                    <p class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-slate-500">
+                        <span class="catalogue-live-dot" aria-hidden="true"></span>
+                        Hover a card to pause &amp; explore
+                    </p>
                 </div>
 
-                <div class="lg:col-span-8 overflow-x-auto pb-4 flex gap-6 reveal-fade-in" style="transition-delay: 0.1s;">
-                    @foreach ($page['featured_images'] as $featured)
-                        <div class="min-w-[280px] sm:min-w-[320px] bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-xl shrink-0 group backdrop-blur-sm">
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="{{ media_url($featured['image']) }}" alt="{{ $featured['alt'] }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="lg:col-span-8 space-y-5 reveal-fade-in" style="transition-delay: 0.1s;">
+                    @foreach ($marqueeRows as $rowIndex => $rowCards)
+                        <div class="catalogue-marquee {{ $rowIndex % 2 === 1 ? 'catalogue-marquee--reverse' : '' }}">
+                            <div class="catalogue-marquee-track">
+                                @foreach ([0, 1] as $clone)
+                                    <div class="catalogue-marquee-group" @if ($clone === 1) aria-hidden="true" @endif>
+                                        @foreach ($rowCards as $card)
+                                            <article class="catalogue-card" @if ($clone === 1) tabindex="-1" @endif>
+                                                @if ($card['image'])
+                                                    <img
+                                                        src="{{ media_url($card['image']) }}"
+                                                        alt="{{ $clone === 1 ? '' : $card['alt'] }}"
+                                                        class="catalogue-card-image"
+                                                        loading="lazy"
+                                                    >
+                                                @endif
+                                                <span class="catalogue-card-index">{{ $card['index'] }}</span>
+                                                <div class="catalogue-card-overlay">
+                                                    @if ($card['type'])
+                                                        <span class="catalogue-card-type">{{ $card['type'] }}</span>
+                                                    @endif
+                                                    <h3 class="catalogue-card-name">{{ $card['name'] }}</h3>
+                                                    @if ($card['note'])
+                                                        <p class="catalogue-card-note">{{ $card['note'] }}</p>
+                                                    @endif
+                                                </div>
+                                            </article>
+                                        @endforeach
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     @endforeach
