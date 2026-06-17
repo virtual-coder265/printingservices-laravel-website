@@ -340,21 +340,15 @@ class HomePageFormSchema
                     Forms\Components\TextInput::make('contact.email')->label('Email')->email()->maxLength(255),
                     Forms\Components\TextInput::make('contact.email_href')->label('Email link')->maxLength(255),
                     Forms\Components\TextInput::make('contact.hours')->label('Office hours')->maxLength(255),
-                    Forms\Components\Repeater::make('contact.po_boxes')
-                        ->label('Postal addresses (P.O. Boxes)')
-                        ->helperText('Shown in the footer contact column, e.g. "P.O. Box 216, Lilongwe".')
-                        ->schema([
-                            Forms\Components\TextInput::make('text')->required()->maxLength(255),
-                        ])
-                        ->defaultItems(0)
-                        ->itemLabel(fn (array $state): ?string => $state['text'] ?? null)
-                        ->columnSpanFull(),
                     Forms\Components\Repeater::make('contact.locations')
-                        ->label('Office locations')
+                        ->label('Branch locations')
                         ->schema([
                             Forms\Components\TextInput::make('text')->required()->maxLength(255),
                         ])
                         ->defaultItems(0)
+                        ->collapsible()
+                        ->cloneable()
+                        ->addActionLabel('Add new branch')
                         ->itemLabel(fn (array $state): ?string => $state['text'] ?? null)
                         ->columnSpanFull(),
                     Forms\Components\Repeater::make('contact.quote_checklist')
@@ -363,6 +357,9 @@ class HomePageFormSchema
                             Forms\Components\TextInput::make('text')->required()->maxLength(255),
                         ])
                         ->defaultItems(0)
+                        ->collapsible()
+                        ->cloneable()
+                        ->addActionLabel('Add new')
                         ->itemLabel(fn (array $state): ?string => $state['text'] ?? null)
                         ->columnSpanFull(),
                 ])->columns(2),

@@ -37,6 +37,7 @@ class FooterEditor extends Page implements HasForms
 
         $footer = SiteSetting::get('homepage', 'footer') ?? $defaults['footer'] ?? [];
         $footerAddresses = SiteSetting::get('homepage', 'footer_addresses') ?? $defaults['footer_addresses'] ?? [];
+        $contact = SiteSetting::get('homepage', 'contact') ?? $defaults['contact'] ?? [];
         $socialLinks = SiteSetting::get('utility', 'social_links') ?? $defaults['utility']['social_links'] ?? [];
         $teams = SiteSetting::get('homepage', 'teams') ?? $defaults['teams'] ?? [];
 
@@ -46,6 +47,7 @@ class FooterEditor extends Page implements HasForms
                 'links' => $this->normalizeFooterLinks($footer['links'] ?? []),
             ],
             'footer_addresses' => $footerAddresses,
+            'po_boxes' => $this->stringsToRepeater($contact['po_boxes'] ?? []),
             'social_links' => $socialLinks,
             'teams' => $teams,
         ]);
@@ -79,6 +81,7 @@ class FooterEditor extends Page implements HasForms
                         ->columns(3)
                         ->collapsible()
                         ->cloneable()
+                        ->addActionLabel('Add new')
                         ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
                         ->columnSpanFull(),
                 ]),
@@ -107,7 +110,27 @@ class FooterEditor extends Page implements HasForms
                             ->columns(2)
                             ->collapsible()
                             ->cloneable()
+                            ->addActionLabel('Add new office')
                             ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
+                            ->columnSpanFull(),
+                    ]),
+                Forms\Components\Section::make('Post office boxes')
+                    ->description('Postal addresses shown in the footer contact column.')
+                    ->schema([
+                        Forms\Components\Repeater::make('po_boxes')
+                            ->label('P.O. Boxes')
+                            ->schema([
+                                Forms\Components\TextInput::make('text')
+                                    ->label('P.O. Box')
+                                    ->placeholder('e.g. P.O. Box 216, Lilongwe')
+                                    ->required()
+                                    ->maxLength(255),
+                            ])
+                            ->defaultItems(0)
+                            ->collapsible()
+                            ->cloneable()
+                            ->addActionLabel('Add new P.O. box')
+                            ->itemLabel(fn (array $state): ?string => $state['text'] ?? null)
                             ->columnSpanFull(),
                     ]),
                 Forms\Components\Section::make('Social links')->schema([
@@ -128,6 +151,7 @@ class FooterEditor extends Page implements HasForms
                         ->columns(3)
                         ->collapsible()
                         ->cloneable()
+                        ->addActionLabel('Add new')
                         ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
                         ->columnSpanFull(),
                 ]),
@@ -149,6 +173,11 @@ class FooterEditor extends Page implements HasForms
             'links' => $this->denormalizeFooterLinks($data['footer']['links'] ?? []),
         ]);
         SiteSetting::set('homepage', 'footer_addresses', $data['footer_addresses'] ?? []);
+
+        $existingContact = SiteSetting::get('homepage', 'contact') ?? config('homepage.contact', []);
+        $existingContact['po_boxes'] = $this->repeaterToStrings($data['po_boxes'] ?? []);
+        SiteSetting::set('homepage', 'contact', $existingContact);
+
         SiteSetting::set('utility', 'social_links', $data['social_links'] ?? []);
         SiteSetting::set('homepage', 'teams', $data['teams'] ?? []);
 
@@ -206,5 +235,27 @@ class FooterEditor extends Page implements HasForms
 
             return null;
         }, $links)));
+    }
+
+    protected function stringsToRepeater(array $items): array
+    {
+        return array_map(function ($item): array {
+            if (is_array($item)) {
+                return $item;
+            }
+
+            return ['text' => (string) $item];
+        }, $items);
+    }
+
+    protected function repeaterToStrings(array $items): array
+    {
+        return array_values(array_filter(array_map(function ($item): ?string {
+            if (is_string($item)) {
+                return $item;
+            }
+
+            return filled($item['text'] ?? null) ? (string) $item['text'] : null;
+        }, $items)));
     }
 }

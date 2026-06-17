@@ -79,7 +79,11 @@ class HomePageEditor extends Page implements HasForms
         SiteSetting::set('homepage', 'featured_images', $data['featured_images'] ?? []);
         SiteSetting::set('homepage', 'trust_metrics', $data['trust_metrics'] ?? []);
         SiteSetting::set('homepage', 'school', $this->denormalizeSchool($data['school'] ?? []));
-        SiteSetting::set('homepage', 'contact', $this->denormalizeContact($data['contact'] ?? []));
+
+        $existingContact = SiteSetting::get('homepage', 'contact') ?? config('homepage.contact', []);
+        $contact = $this->denormalizeContact($data['contact'] ?? []);
+        $contact['po_boxes'] = $existingContact['po_boxes'] ?? config('homepage.contact.po_boxes', []);
+        SiteSetting::set('homepage', 'contact', $contact);
 
         Notification::make()->title('Home page content saved')->success()->send();
     }
@@ -154,7 +158,6 @@ class HomePageEditor extends Page implements HasForms
 
     protected function normalizeContact(array $contact): array
     {
-        $contact['po_boxes'] = $this->stringsToRepeater($contact['po_boxes'] ?? config('homepage.contact.po_boxes', []));
         $contact['locations'] = $this->stringsToRepeater($contact['locations'] ?? []);
         $contact['quote_checklist'] = $this->stringsToRepeater($contact['quote_checklist'] ?? []);
 
@@ -163,7 +166,6 @@ class HomePageEditor extends Page implements HasForms
 
     protected function denormalizeContact(array $contact): array
     {
-        $contact['po_boxes'] = $this->repeaterToStrings($contact['po_boxes'] ?? []);
         $contact['locations'] = $this->repeaterToStrings($contact['locations'] ?? []);
         $contact['quote_checklist'] = $this->repeaterToStrings($contact['quote_checklist'] ?? []);
 
