@@ -508,7 +508,7 @@ return [
             'Real-world production workflows and best practices',
         ],
         'cta_label' => 'Register Interest',
-        'cta_href' => '#contact',
+        'cta_href' => '/training/enroll',
         'image' => 'images/training-school2.png',
     ],
 

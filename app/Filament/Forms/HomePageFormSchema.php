@@ -318,7 +318,10 @@ class HomePageFormSchema
                         ->itemLabel(fn (array $state): ?string => $state['text'] ?? null)
                         ->columnSpanFull(),
                     Forms\Components\TextInput::make('school.cta_label')->label('CTA label')->maxLength(255),
-                    Forms\Components\TextInput::make('school.cta_href')->label('CTA link')->maxLength(255),
+                    Forms\Components\TextInput::make('school.cta_href')
+                        ->label('CTA link')
+                        ->maxLength(255)
+                        ->helperText('Use /training/enroll for the student enrollment form.'),
                 ])->columns(2),
                 Forms\Components\Section::make('School image')->schema([
                     self::homepageImageUpload('school.image', 'Featured image', 200),

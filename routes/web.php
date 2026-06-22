@@ -7,12 +7,19 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicPageController;
 use App\Http\Controllers\Admin\QuotationAttachmentDownloadController;
 use App\Http\Controllers\QuotationRequestController;
+use App\Http\Controllers\StudentEnrollmentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PublicPageController::class, 'home'])->name('home');
 Route::get('/services', [PublicPageController::class, 'services'])->name('services');
 Route::get('/products', [PublicPageController::class, 'products'])->name('products');
 Route::get('/training', [PublicPageController::class, 'training'])->name('training');
+Route::get('/training/enroll', [PublicPageController::class, 'enrollment'])->name('enrollment');
+Route::post('/training/enroll', [StudentEnrollmentController::class, 'store'])
+    ->middleware('throttle:enrollment-submit')
+    ->name('enrollment.store');
+Route::get('/training/enroll/thank-you/{studentEnrollment}', [StudentEnrollmentController::class, 'confirmation'])
+    ->name('enrollment.confirmation');
 Route::get('/about', [PublicPageController::class, 'about'])->name('about');
 Route::get('/teams', [PublicPageController::class, 'teams'])->name('teams');
 Route::get('/contact', [PublicPageController::class, 'contact'])->name('contact');

@@ -76,6 +76,13 @@ class AppServiceProvider extends ServiceProvider
 
             return Limit::perMinutes($minutes, $max)->by($request->ip());
         });
+
+        RateLimiter::for('enrollment-submit', function (Request $request) {
+            $max = config('student_enrollments.rate_limit.max_attempts', 5);
+            $minutes = config('student_enrollments.rate_limit.decay_minutes', 60);
+
+            return Limit::perMinutes($minutes, $max)->by($request->ip());
+        });
     }
 
     protected function configureApplicationUrl(): void

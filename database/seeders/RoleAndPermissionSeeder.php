@@ -28,6 +28,9 @@ class RoleAndPermissionSeeder extends Seeder
             'view_any_customer_profile', 'view_customer_profile', 'create_customer_profile', 'update_customer_profile', 'delete_customer_profile',
             'view_any_user', 'view_user', 'create_user', 'update_user', 'delete_user',
             'view_any_role', 'view_role', 'create_role', 'update_role', 'delete_role',
+            'view_any_registration_period', 'view_registration_period', 'create_registration_period', 'update_registration_period', 'delete_registration_period',
+            'view_any_student_enrollment', 'view_student_enrollment', 'update_student_enrollment',
+            'approve_student_enrollment', 'reject_student_enrollment',
             'page_site_settings', 'page_homepage_editor', 'page_footer_editor', 'page_erp_dashboard',
             'push_quotation_to_erp', 'push_order_to_erp', 'sync_erp_catalog',
         ];
@@ -48,6 +51,14 @@ class RoleAndPermissionSeeder extends Seeder
                 'page_footer_editor',
                 'view_any_service', 'view_service', 'update_service',
                 'view_any_product', 'view_product', 'update_product',
+                'view_any_registration_period', 'view_registration_period', 'create_registration_period', 'update_registration_period', 'delete_registration_period',
+                'view_any_student_enrollment', 'view_student_enrollment', 'update_student_enrollment',
+                'approve_student_enrollment', 'reject_student_enrollment',
+            ],
+            'training_admin' => [
+                'view_any_registration_period', 'view_registration_period', 'create_registration_period', 'update_registration_period', 'delete_registration_period',
+                'view_any_student_enrollment', 'view_student_enrollment', 'update_student_enrollment',
+                'approve_student_enrollment', 'reject_student_enrollment',
             ],
             'quotation_admin' => [
                 'view_any_quotation_request', 'view_quotation_request', 'update_quotation_request',

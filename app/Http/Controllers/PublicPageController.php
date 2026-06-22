@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Services\CartService;
 use App\Services\SiteContentService;
+use App\Services\StudentEnrollments\RegistrationCalendarService;
 
 class PublicPageController extends Controller
 {
     public function __construct(
         protected SiteContentService $siteContent,
         protected CartService $cartService,
+        protected RegistrationCalendarService $registrationCalendar,
     ) {}
 
     private function pageData(string $currentPage): array
@@ -38,6 +40,22 @@ class PublicPageController extends Controller
     public function training()
     {
         return view('pages.training', $this->pageData('training'));
+    }
+
+    public function enrollment()
+    {
+        $data = $this->pageData('training');
+        $openPeriod = $this->registrationCalendar->getOpenPeriod();
+        $data['enrollmentOpen'] = $openPeriod !== null;
+        $data['openPeriod'] = $openPeriod;
+        $data['upcomingPeriod'] = $this->registrationCalendar->getUpcomingPeriod();
+        $data['enrollmentConfig'] = [
+            'genderOptions' => config('student_enrollments.gender_options'),
+            'qualificationLevels' => config('student_enrollments.qualification_levels'),
+            'districts' => config('student_enrollments.districts'),
+        ];
+
+        return view('pages.enrollment', $data);
     }
 
     public function about()

@@ -451,7 +451,12 @@
                     </ul>
 
                     <div class="pt-4">
-                        <a href="{{ $page['school']['cta_href'] }}" class="bg-forest-solid inline-flex items-center justify-center px-5 py-3 rounded-lg text-sm font-bold text-white shadow-md">
+                        @php
+                            $schoolCtaHref = in_array($page['school']['cta_href'] ?? '', ['#contact', '/training/enroll'], true)
+                                ? route('enrollment')
+                                : ($page['school']['cta_href'] ?? route('enrollment'));
+                        @endphp
+                        <a href="{{ $schoolCtaHref }}" class="bg-forest-solid inline-flex items-center justify-center px-5 py-3 rounded-lg text-sm font-bold text-white shadow-md">
                             {{ $page['school']['cta_label'] }} &rarr;
                         </a>
                     </div>
